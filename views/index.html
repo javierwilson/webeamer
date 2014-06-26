@@ -1,0 +1,32 @@
+<html>
+<body>
+%if name:
+<h1>Hello {{ name }}</h1>
+    <form id="main" method="post" action="/{{ name }}/{{ slide }}">
+    <fieldset>
+    <legend>Slide # {{ slide }}</legend>
+    <ol>
+    <li>
+    <label for="text">Texto</label>
+    <textarea id="text" name="text" rows=5 cols=40 required>{{ text }}</textarea>
+    </li>
+    </ol>
+    </fieldset>
+    <input type="submit" value="Continue..."/>
+    </form>
+%else:
+    <form id="main" method="post">
+    <fieldset>
+    <legend>Name your presentation...</legend>
+    <ol>
+    <li>
+    <label for="name">Name</label>
+    <input id="name" name="name" type="text" />
+    </li>
+    </ol>
+    </fieldset>
+    <input type="submit" value="Enter"/>
+    </form>
+%end
+</body>
+</html>
