@@ -1,7 +1,6 @@
 <html>
 <body>
-%if name:
-<h1>Hello {{ name }}</h1>
+<h1>welcome to: {{ name }}</h1>
     <form id="main" method="post" action="/{{ name }}/{{ slide }}">
     <fieldset>
     <legend>Slide # {{ slide }}</legend>
@@ -14,19 +13,16 @@
     </fieldset>
     <input type="submit" value="Continue..."/>
     </form>
-%else:
-    <form id="main" method="post">
-    <fieldset>
-    <legend>Name your presentation...</legend>
-    <ol>
-    <li>
-    <label for="name">Name</label>
-    <input id="name" name="name" type="text" />
-    </li>
-    </ol>
-    </fieldset>
-    <input type="submit" value="Enter"/>
+
+    <h2>Oter slides</h2>
+    <ul>
+    % for row in rows:
+    <li><a href="/{{ name }}/{{ row[0] }}">{{ row[0] }}: {{ row[1][:50] }}</a></li>
+    % end
+    </ul>
+
+    <form id="go" action="/{{ name }}/go">
+    <input type="submit" value="Generate presentation"/>
     </form>
-%end
 </body>
 </html>

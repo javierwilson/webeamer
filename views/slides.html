@@ -1,0 +1,13 @@
+<html>
+<body>
+<style>
+pre {white-space: pre-wrap;}
+</style>
+<h1>{{ name }}</h1>
+ % for row in rows:
+    Slide # {{ row[0] }}:<br/>
+    <pre>{{ row[1] }}</pre>
+    <hr/>
+ % end
+</body>
+</html>
