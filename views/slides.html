@@ -3,11 +3,12 @@
 <style>
 pre {white-space: pre-wrap;}
 </style>
-<h1>{{ name }}</h1>
+<h1>{{ p_title }}</h1>
  % for row in rows:
-    Slide # {{ row[0] }}: {{ row[1] }}<br/>
+    <fieldset>
+    <legend>Slide # {{ row[0] }}: {{ row[1] }}</legend>
     <pre>{{ row[2] }}</pre>
-    <hr/>
+    </fieldset>
  % end
 </body>
 </html>
