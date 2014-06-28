@@ -5,8 +5,8 @@ pre {white-space: pre-wrap;}
 </style>
 <h1>{{ name }}</h1>
  % for row in rows:
-    Slide # {{ row[0] }}:<br/>
-    <pre>{{ row[1] }}</pre>
+    Slide # {{ row[0] }}: {{ row[1] }}<br/>
+    <pre>{{ row[2] }}</pre>
     <hr/>
  % end
 </body>

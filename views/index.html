@@ -6,12 +6,16 @@
     <legend>Slide # {{ slide }}</legend>
     <ol>
     <li>
-    <label for="text">Texto</label>
-    <textarea id="text" name="text" rows=5 cols=40 required>{{ text }}</textarea>
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" value="{{ title }}" />
+    </li>
+    <li>
+        <label for="text">Texto</label>
+        <textarea id="text" name="text" rows=5 cols=40 required>{{ text }}</textarea>
     </li>
     </ol>
     </fieldset>
-    <input type="submit" value="Continue..."/>
+    <input type="submit" value="Save..."/>
     </form>
 
     <h2>Oter slides</h2>
@@ -21,8 +25,25 @@
     % end
     </ul>
 
-    <form id="go" action="/{{ name }}/go">
-    <input type="submit" value="Generate presentation"/>
+    <form id="general" method="post" action="/{{ name }}" >
+    <fieldset>
+    <legend>Your presentation...</legend>
+    <ol>
+        <li>
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" value="{{ name }}" disabled />
+        </li>
+        <li>
+        <label for="title">Title</label>
+        <input id="title" name="title" type="text" value="{{ p_title }}" />
+        </li>
+    </ol>
+    </fieldset>
+    <input type="submit" value="Update"/>
     </form>
+
+    <form id="html" action="/{{ name }}/html"><input type="submit" value="HTML presentation"/></form>
+    <form id="tex" action="/{{ name }}/tex"><input type="submit" value="LaTeX presentation"/></form>
+    <form id="pdf" action="/{{ name }}/pdf"><input type="submit" value="PDF Beamer presentation"/></form>
 </body>
 </html>
