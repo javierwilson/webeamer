@@ -57,6 +57,20 @@ def home(name=None, slide=1):
     
     return dict(name=name, slide=slide, text=text, title=title, rows=rows, p_title=p_title)
 
+@post('/<name>')
+@view('index.html')
+def save_presentation(name):
+    title = request.forms.get('title').decode('utf-8')
+    conn = sqlite3.connect( DBFILE )
+    db = conn.cursor()
+    db.execute('UPDATE presentations SET title=? WHERE name=?', (title, name, ) )
+    conn.commit()
+    conn.close()
+    next_slide = str(1)
+    redirect('/' + name + '/' + next_slide)
+    return
+
+
 @post('/<name>/<slide:int>')
 @view('index.html')
 def save_slide(name, slide):

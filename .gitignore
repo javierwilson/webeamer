@@ -54,6 +54,7 @@ docs/_build/
 
 # vim
 *.swp
+*.swo
 
 # local config
 local.py
