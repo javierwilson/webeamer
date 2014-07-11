@@ -1,5 +1,6 @@
 \documentclass{beamer}
 \usepackage{beamerthemeshadow}
+\usepackage[utf8]{inputenc}
 \begin{document}
 \title{ {{ p_title }} }
 \author{ {{ p_author }} }
