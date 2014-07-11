@@ -14,16 +14,17 @@ def setup():
     conn = sqlite3.connect( DBFILE )
     db = conn.cursor()
     db.execute('CREATE TABLE IF NOT EXISTS slides (name, slide, title, text, PRIMARY KEY(name, slide))')
-    db.execute('CREATE TABLE IF NOT EXISTS presentations (name PRIMARY KEY, title, text)')
+    db.execute('CREATE TABLE IF NOT EXISTS presentations (name PRIMARY KEY, title, author, text)')
     conn.close()
 
 @post('/')
 def do_login():
     name = request.forms.get('name').decode('utf-8')
     title = request.forms.get('title').decode('utf-8')
+    author = request.forms.get('author').decode('utf-8')
     conn = sqlite3.connect( DBFILE )
     db = conn.cursor()
-    db.execute('INSERT INTO presentations (name,title) VALUES (?, ?)', (name, title, ) )
+    db.execute('INSERT INTO presentations (name,title,author) VALUES (?, ?, ?)', (name, title, author, ) )
     conn.commit()
     conn.close()
     redirect('/' + name + '/1')
@@ -41,13 +42,14 @@ def home(name=None, slide=1):
     if name:
         conn = sqlite3.connect( DBFILE )
         db = conn.cursor()
-        presentation = db.execute('SELECT title,text FROM presentations WHERE name=?', (name,) ).fetchone()
+        presentation = db.execute('SELECT title,author,text FROM presentations WHERE name=?', (name,) ).fetchone()
         p_title = presentation[0]
-        p_text = presentation[1]
+        p_author = presentation[1]
+        p_text = presentation[2]
         row = db.execute('SELECT title,text FROM slides WHERE name=? AND slide=?', (name, slide) ).fetchone()
         rows = db.execute('SELECT slide,title,text FROM slides WHERE name=?', (name,) ).fetchall()
         if row:
-            return dict(name=name, slide=slide, title=row[0], text=row[1], rows=rows, p_title=p_title)
+            return dict(name=name, slide=slide, title=row[0], text=row[1], rows=rows, p_title=p_title, p_author=p_author)
         else:
             #return error404(404)
             title = 'Hello Monkey!'
@@ -56,21 +58,21 @@ def home(name=None, slide=1):
     else:
         text = 'Go login or something!'
     
-    return dict(name=name, slide=slide, text=text, title=title, rows=rows, p_title=p_title)
+    return dict(name=name, slide=slide, text=text, title=title, rows=rows, p_title=p_title, p_author=p_author)
 
 @post('/<name>')
 @view('index.html')
 def save_presentation(name):
     title = request.forms.get('title').decode('utf-8')
+    author = request.forms.get('author').decode('utf-8')
     conn = sqlite3.connect( DBFILE )
     db = conn.cursor()
-    db.execute('UPDATE presentations SET title=? WHERE name=?', (title, name, ) )
+    db.execute('UPDATE presentations SET title=?, author=? WHERE name=?', (title, author, name, ) )
     conn.commit()
     conn.close()
     next_slide = str(1)
     redirect('/' + name + '/' + next_slide)
     return
-
 
 @post('/<name>/<slide:int>')
 @view('index.html')
@@ -94,12 +96,13 @@ def save_slide(name, slide):
 def generate(name, format):
     conn = sqlite3.connect( DBFILE )
     db = conn.cursor()
-    presentation = db.execute('SELECT title,text FROM presentations WHERE name=?', (name,) ).fetchone()
+    presentation = db.execute('SELECT title,author,text FROM presentations WHERE name=?', (name,) ).fetchone()
     p_title = presentation[0]
-    p_text = presentation[1]
+    p_author = presentation[1]
+    p_text = presentation[2]
     rows = db.execute('SELECT slide,title,text FROM slides WHERE name=?', (name,) ).fetchall()
     tpl = 'slides.' + format
-    result = template(tpl, name=name, rows=rows, p_title=p_title)
+    result = template(tpl, name=name, rows=rows, p_title=p_title, p_author=p_author)
     if format == 'html':
         return result
     elif format == 'pdf':
