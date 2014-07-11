@@ -1,4 +1,5 @@
-from bottle import Bottle, run, debug, template, route, view, request, redirect, post, error
+from bottle import Bottle, run, debug, template, route, view, request, redirect, post, error, response
+from tex import latex2pdf
 import sqlite3
 
 DEBUG = False
@@ -89,17 +90,25 @@ def save_slide(name, slide):
     redirect('/' + name + '/' + next_slide)
     return
 
-
-@route('/<name>/html')
-@view('slides.html')
-def generate(name):
+@route('/<name>/print/<format>')
+def generate(name, format):
     conn = sqlite3.connect( DBFILE )
     db = conn.cursor()
     presentation = db.execute('SELECT title,text FROM presentations WHERE name=?', (name,) ).fetchone()
     p_title = presentation[0]
     p_text = presentation[1]
     rows = db.execute('SELECT slide,title,text FROM slides WHERE name=?', (name,) ).fetchall()
-    return dict(name=name, rows=rows, p_title=p_title)
+    tpl = 'slides.' + format
+    result = template(tpl, name=name, rows=rows, p_title=p_title)
+    if format == 'html':
+        return result
+    elif format == 'pdf':
+        result = latex2pdf(result)
+        response.content_type = 'application/pdf'
+        return result
+    elif format == 'tex':
+        response.content_type = 'text/plain; charset=utf-8'
+        return result
 
 @error(404)
 def error404(error):

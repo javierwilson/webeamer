@@ -1,4 +1,5 @@
 webeamer
 ========
 
-Creates beamer presentations using a web interface
+Bottle application that creates beamer presentations using a web interface.
+

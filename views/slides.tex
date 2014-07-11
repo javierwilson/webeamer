@@ -1,0 +1,19 @@
+\documentclass{beamer}
+\usepackage{beamerthemeshadow}
+\begin{document}
+\title{ {{ p_title }} }
+\author{John Doe}
+\date{\today} 
+
+\frame{\titlepage} 
+
+\frame{\frametitle{Table of contents}\tableofcontents} 
+
+% for row in rows:
+\section{Section no. {{ row[0] }} } 
+\frame{\frametitle{ {{ row[1] }} } 
+{{ row[2] }}
+}
+% end
+
+\end{document}
