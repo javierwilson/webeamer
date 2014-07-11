@@ -1,6 +1,7 @@
 from bottle import Bottle, run, debug, template, route, view, request, redirect, post, error, response
 from tex import latex2pdf
 import sqlite3
+import pypandoc
 
 DEBUG = False
 DBFILE = '/tmp/slides.db'
@@ -92,8 +93,11 @@ def save_slide(name, slide):
     redirect('/' + name + '/' + next_slide)
     return
 
-@route('/<name>/print/<format>')
-def generate(name, format):
+@route('/<name>/print/<oformat>')
+def generate(name, oformat):
+    tformat = oformat
+    if oformat == 'pdf':
+        tformat = 'latex'
     conn = sqlite3.connect( DBFILE )
     db = conn.cursor()
     presentation = db.execute('SELECT title,author,text FROM presentations WHERE name=?', (name,) ).fetchone()
@@ -101,15 +105,20 @@ def generate(name, format):
     p_author = presentation[1]
     p_text = presentation[2]
     rows = db.execute('SELECT slide,title,text FROM slides WHERE name=?', (name,) ).fetchall()
-    tpl = 'slides.' + format
+    new_rows = []
+    for row in rows:
+        new_row = (row[0], row[1], pypandoc.convert(row[2], tformat, format='markdown'))
+        new_rows.append(new_row)
+    rows = new_rows
+    tpl = 'slides.' + oformat
     result = template(tpl, name=name, rows=rows, p_title=p_title, p_author=p_author)
-    if format == 'html':
+    if oformat == 'html':
         return result
-    elif format == 'pdf':
+    elif oformat == 'pdf':
         result = latex2pdf(result)
         response.content_type = 'application/pdf'
         return result
-    elif format == 'tex':
+    elif oformat == 'latex':
         response.content_type = 'text/plain; charset=utf-8'
         return result
 

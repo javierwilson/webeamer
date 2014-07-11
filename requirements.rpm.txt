@@ -1,0 +1,4 @@
+* texlive packages
+* texlive pdflatex
+* pandoc
+* sqlite 3

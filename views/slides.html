@@ -7,7 +7,9 @@ pre {white-space: pre-wrap;}
  % for row in rows:
     <fieldset>
     <legend>Slide # {{ row[0] }}: {{ row[1] }}</legend>
-    <pre>{{ row[2] }}</pre>
+
+    {{ !row[2] }}
+
     </fieldset>
  % end
 </body>
