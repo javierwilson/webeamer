@@ -11,7 +11,7 @@
 \frame{\frametitle{Table of contents}\tableofcontents} 
 
 % for row in rows:
-\section{Section no. {{ row[0] }} } 
+\section{ {{ row[1] }} } 
 \frame{\frametitle{ {{ row[1] }} } 
 {{ row[2] }}
 }
