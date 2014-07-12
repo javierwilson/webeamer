@@ -9,7 +9,10 @@ import pypandoc
 DEBUG = False
 DBFILE = '/tmp/slides.db'
 
-from local import *
+try:
+    from local import *
+except:
+    pass
 
 debug(DEBUG)
 
