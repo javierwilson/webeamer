@@ -128,9 +128,13 @@ def generate(name, oformat):
         response.content_type = 'text/plain; charset=utf-8'
         return result
 
+@route('/static/<filename:path>')
+def send_static(filename):
+    return static_file(filename, root=STATIC_ROOT)
+
 @error(404)
 def error404(error):
-    return 'Nothing here, sorry'
+    return '404: Nothing here, sorry'
 
 if __name__ == "__main__":
     run(host='localhost', port=8080)
