@@ -1,4 +1,7 @@
-from bottle import Bottle, run, debug, template, route, view, request, redirect, post, error, response
+#!/usr/bin/env python
+
+import bottle
+from bottle import Bottle, run, debug, template, route, view, request, redirect, post, error, response, default_app
 from tex import latex2pdf
 import sqlite3
 import pypandoc
@@ -126,4 +129,7 @@ def generate(name, oformat):
 def error404(error):
     return 'Nothing here, sorry'
 
-run(host='localhost', port=8080)
+if __name__ == "__main__":
+    run(host='localhost', port=8080)
+
+wsgi = bottle.default_app()
