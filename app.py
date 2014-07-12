@@ -50,6 +50,8 @@ def home(name=None, slide=1):
         conn = sqlite3.connect( DBFILE )
         db = conn.cursor()
         presentation = db.execute('SELECT title,author,text FROM presentations WHERE name=?', (name,) ).fetchone()
+        if not presentation:
+            return error404(404)
         p_title = presentation[0]
         p_author = presentation[1]
         p_text = presentation[2]
@@ -58,7 +60,6 @@ def home(name=None, slide=1):
         if row:
             return dict(name=name, slide=slide, title=row[0], text=row[1], rows=rows, p_title=p_title, p_author=p_author)
         else:
-            #return error404(404)
             title = 'Hello Monkey!'
             text = 'This is the winter of our discontent.'
         conn.close()
